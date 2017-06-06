@@ -57,6 +57,7 @@ if [ ! -d "$ANDROID_NDK_ROOT/toolchains/$_ANDROID_EABI" ]; then
 fi
 
 #####################################################################
+_ANDROID_TARGET_SELECT="arch-$ANDROID_ABI"
 
 case $_ANDROID_TARGET_SELECT in
 	arch-arm)

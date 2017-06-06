@@ -18,8 +18,6 @@
 # _ANDROID_EABI="x86-4.6"
 # _ANDROID_EABI="arm-linux-androideabi-4.6"
 
-_ANDROID_EABI="arm-linux-androideabi-4.9"
-
 # Set _ANDROID_ARCH to the architecture you are building for.
 # This value is always used.
 # _ANDROID_ARCH=arch-x86
@@ -57,7 +55,8 @@ if [ ! -d "$ANDROID_NDK_ROOT/toolchains/$_ANDROID_EABI" ]; then
 fi
 
 #####################################################################
-_ANDROID_TARGET_SELECT="arch-$ANDROID_ABI"
+_ANDROID_TARGET_SELECT="arch-$ANDROID_ARCH"
+_ANDROID_ARCH="arch-$ANDROID_ARCH"
 
 case $_ANDROID_TARGET_SELECT in
 	arch-arm)

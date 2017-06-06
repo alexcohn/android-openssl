@@ -10,14 +10,15 @@
 #####################################################################
 
 # Set ANDROID_NDK_ROOT to you NDK location. For example,
-# /opt/android-ndk-r8e or /opt/android-ndk-r9. This can be done in a
-# login script.
+# /opt/android-ndk-r15 or ~/Libraries/Android/sdk/ndk-bundle. This can be done in a
+# login script. We assume NDK r14.
 
 # Set _ANDROID_EABI to the EABI you want to use. You can find the
-# list in $ANDROID_NDK_ROOT/toolchains. This value is always used.
+# list in $ANDROID_NDK_ROOT/toolchains. We always use gcc 4.9.
 # _ANDROID_EABI="x86-4.6"
 # _ANDROID_EABI="arm-linux-androideabi-4.6"
-#_ANDROID_EABI="arm-linux-androideabi-4.9"
+
+_ANDROID_EABI="arm-linux-androideabi-4.9"
 
 # Set _ANDROID_ARCH to the architecture you are building for.
 # This value is always used.
@@ -57,6 +58,40 @@ fi
 
 #####################################################################
 
+case $_ANDROID_TARGET_SELECT in
+	arch-arm)
+      _ANDROID_EABI="arm-linux-androideabi-4.9"
+      ANDROID_TOOLS="arm-linux-androideabi-gcc arm-linux-androideabi-ranlib arm-linux-androideabi-ld"
+	  ;;
+	arch-arm-v7a)
+      ANDROID_TOOLS="arm-linux-androideabi-gcc arm-linux-androideabi-ranlib arm-linux-androideabi-ld"
+      _ANDROID_EABI="arm-linux-androideabi-4.9"
+	  ;;
+	arch-arm64-v8a)
+      ANDROID_TOOLS="aarch64-linux-android-gcc aarch64-linux-android-ranlib aarch64-linux-android-ld"
+      _ANDROID_EABI="aarch64-linux-android-4.9"
+      ;;
+	arch-x86)	  
+      ANDROID_TOOLS="i686-linux-android-gcc i686-linux-android-ranlib i686-linux-android-ld"
+      _ANDROID_EABI="x86-4.9"
+	  ;;	  
+	arch-x86_64)	  
+      ANDROID_TOOLS="x86_64-linux-android-gcc x86_64-linux-android-ranlib x86_64-linux-android-ld"
+      _ANDROID_EABI="x86_64-4.9"
+	  ;;	  
+    arch-mips)
+      ANDROID_TOOLS="mipsel-linux-android-gcc mipsel-linux-android-ranlib mipsel-linux-android-ld"
+      _ANDROID_EABI="mipsel-linux-android-4.9"
+      ;;
+    arch-mips64)
+      ANDROID_TOOLS="mips64el-linux-android-gcc mips64el-linux-android-ranlib mips64el-linux-android-ld"
+      _ANDROID_EABI="mips64el-linux-android-4.9"
+      ;;
+	*)
+	  echo "ERROR ERROR ERROR"
+	  ;;
+esac
+
 # Based on ANDROID_NDK_ROOT, try and pick up the required toolchain. We expect something like:
 # /opt/android-ndk-r83/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86_64/bin
 # Once we locate the toolchain, we add it to the PATH. Note: this is the 'hard way' of
@@ -78,34 +113,6 @@ if [ -z "$ANDROID_TOOLCHAIN" ] || [ ! -d "$ANDROID_TOOLCHAIN" ]; then
   # echo "$ANDROID_TOOLCHAIN"
   # exit 1
 fi
-
-case $_ANDROID_TARGET_SELECT in
-	arch-arm)
-      ANDROID_TOOLS="arm-linux-androideabi-gcc arm-linux-androideabi-ranlib arm-linux-androideabi-ld"
-	  ;;
-	arch-arm-v7a)
-      ANDROID_TOOLS="arm-linux-androideabi-gcc arm-linux-androideabi-ranlib arm-linux-androideabi-ld"
-	  ;;
-	arch-arm64-v8a)
-      ANDROID_TOOLS="aarch64-linux-android-gcc aarch64-linux-android-ranlib aarch64-linux-android-ld"
-      ;;
-	arch-x86)	  
-      ANDROID_TOOLS="i686-linux-android-gcc i686-linux-android-ranlib i686-linux-android-ld"
-	  ;;	  
-	arch-x86_64)	  
-      ANDROID_TOOLS="x86_64-linux-android-gcc x86_64-linux-android-ranlib x86_64-linux-android-ld"
-	  ;;	  
-    arch-mips)
-      ANDROID_TOOLS="mipsel-linux-android-gcc mipsel-linux-android-ranlib mipsel-linux-android-ld"
-      ;;
-    arch-mips64)
-      ANDROID_TOOLS="mips64el-linux-android-gcc mips64el-linux-android-ranlib mips64el-linux-android-ld"
-      ;;
-	*)
-	  echo "ERROR ERROR ERROR"
-	  ;;
-esac
-
 for tool in $ANDROID_TOOLS
 do
   # Error checking
